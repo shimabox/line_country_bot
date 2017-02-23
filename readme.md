@@ -1,21 +1,91 @@
-# Lumen PHP Framework
+# line_country_bot
 
-[![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
-[![Total Downloads](https://poser.pugx.org/laravel/lumen-framework/d/total.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/lumen-framework/v/stable.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/lumen-framework/v/unstable.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![License](https://poser.pugx.org/laravel/lumen-framework/license.svg)](https://packagist.org/packages/laravel/lumen-framework)
+## これは何
 
-Laravel Lumen is a stunningly fast PHP micro-framework for building web applications with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Lumen attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as routing, database abstraction, queueing, and caching.
+- LINEのMessaging APIを使ったbotです
+- 国名を言われると国旗を出します
+- クイズ と言われると国旗を使ったクイズを出します
+  - quiz でも反応します
 
-## Official Documentation
+## 必要なもの
 
-Documentation for the framework can be found on the [Lumen website](http://lumen.laravel.com/docs).
+- PHP 5.6.4+ or newer
+- [Composer](https://getcomposer.org)
+- Line Developer Trial アカウント
+  - [Messaging APIのご紹介 | LINE Business Center](https://business.line.me/ja/services/bot "Messaging APIのご紹介 | LINE Business Center")
 
-## Security Vulnerabilities
+## インストール
 
-If you discover a security vulnerability within Lumen, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+```
+$ git clone https://github.com/shimabox/line_country_bot.git
+$ cd line_coutry_bot/
+$ composer install
+```
 
-## License
+## 設定
 
-The Lumen framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+```
+$ cp .env.example .env
+$ vim .env
+```
+
+```
+APP_ENV=production
+APP_DEBUG=false
+APP_KEY=
+APP_URL=your website url
+APP_TIMEZONE=Asia/Tokyo
+
+LINEBOT_API_ENDPOINT=your api endpoint
+CHANNEL_SECRET=your api channel secret
+CHANEL_ACCESS_TOKEN=your api access token
+
+COUNTRY_DATA_CSV=<国情報を持つCSV配置パス>
+NATIONAL_FLAG_IMG_PATH=<国旗画像配置ディレクトリパス>
+
+PROFILE_IMG=assets/img/profile/your-profile-img
+PROFILE_TITLE=your profile title
+PROFILE_TEXT=your profile text
+PROFILE_LINK_TEXT=your profile link text
+PROFILE_LINK_URL=your profile link url
+```
+
+- COUNTRY_DATA_CSV
+  - 国情報を持つCSVのパスを記述します
+    - resources/ 以下のパスを見ます
+  - 自分はこちらを利用させて頂きました
+    - [世界の首都 World Capitals - ASTI アマノ技研](http://www.amano-tec.com/download/world.html "世界の首都 World Capitals - ASTI アマノ技研")
+    ```
+    code,namejp,namejps,nameen,namens,capitaljp,capitalen,lat,lon
+    AD,アンドラ公国,アンドラ,Principality of Andorra,Andorra,アンドララベラ,Andorra la Vella,42.4919826,1.5111806
+    ・
+    ・
+    ```
+    - この形式(かつSJIS)であれば検索に引っかかると思います
+  - csv/h2706world_sjis.csv と書けば、``` resources/csv/h2706world_sjis.csv ``` を参照します
+
+- NATIONAL_FLAG_IMG_PATH
+  - 国旗画像を配置するディレクトリのパスを記述します
+  - 自分はこちらを利用させて頂きました
+    - [Flags of all countries](http://flagpedia.net/ "Flags of all countries")
+  - 国コード(小文字).png であればよいです
+  - assets/img/flags/ と書けば、``` APP_URL/assets/img/flags/国コード(小文字).png ``` を参照します
+
+- PROFILE_XXX
+  - プロフィール情報を表示したい場合、PROFILE_IMGを設定し、各定数を記述する必要があります
+  - プロフィール情報を表示しない場合、PROFILE_IMGは何も設定しないでください
+  - PROFILE_IMG
+    - プロフィール画像
+    - assets/img/profile/profile.png と書けば、``` APP_URL/img/profile/profile.png ``` を参照します
+  - PROFILE_TITLE
+    - プロフィールタイトル
+  - PROFILE_TEXT
+    - プロフィール説明文です
+  - PROFILE_LINK_TEXT
+    - プロフィール用URLで表示するテキストです
+  - PROFILE_LINK_URL
+    - プロフィール用URLです (twitterとか)
+
+### おまけ
+
+君の名は or who と言われると、プロフィールを表示します

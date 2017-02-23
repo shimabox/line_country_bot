@@ -2,6 +2,10 @@
 
 require_once __DIR__.'/../vendor/autoload.php';
 
+use Monolog\Logger;
+use Monolog\Handler\RotatingFileHandler;
+use Monolog\Formatter\LineFormatter;
+
 try {
     (new Dotenv\Dotenv(__DIR__.'/../'))->load();
 } catch (Dotenv\Exception\InvalidPathException $e) {
@@ -67,6 +71,10 @@ $app->singleton(
 //     'auth' => App\Http\Middleware\Authenticate::class,
 // ]);
 
+$app->routeMiddleware([
+    'botauth' => App\Http\Middleware\BotAuthenticate::class,
+]);
+
 /*
 |--------------------------------------------------------------------------
 | Register Service Providers
@@ -81,6 +89,56 @@ $app->singleton(
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
+
+$app->register(App\Providers\LINEBotServiceProvider::class);
+
+/*
+|--------------------------------------------------------------------------
+| Define a callback to be used to configure Monolog
+|--------------------------------------------------------------------------
+*/
+$app->configureMonologUsing(function($monolog) {
+
+    $handlers[] = (
+        new RotatingFileHandler(
+            storage_path("logs/error.log"),
+            0,
+            Logger::ERROR,
+            false
+        )
+    )->setFormatter(new LineFormatter(null, null, true, true));
+
+    $handlers[] = (
+        new RotatingFileHandler(
+            storage_path("logs/warning.log"),
+            0,
+            Logger::WARNING,
+            false
+        )
+    )->setFormatter(new LineFormatter(null, null, true, true));
+
+    $handlers[] = (
+        new RotatingFileHandler(
+            storage_path("logs/info.log"),
+            0,
+            Logger::INFO,
+            false
+        )
+    )->setFormatter(new LineFormatter(null, null, true, true));
+
+    $handlers[] = (
+        new RotatingFileHandler(
+            storage_path("logs/debug.log"),
+            0,
+            Logger::DEBUG,
+            false
+        )
+    )->setFormatter(new LineFormatter(null, null, true, true));
+
+    $monolog->setHandlers($handlers);
+
+    return $monolog;
+});
 
 /*
 |--------------------------------------------------------------------------

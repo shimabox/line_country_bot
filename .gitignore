@@ -3,3 +3,8 @@
 Homestead.json
 Homestead.yaml
 .env
+.DS_Store
+
+public/assets/img/national_flag/*
+public/assets/img/profile/*
+resources/csv/country/*

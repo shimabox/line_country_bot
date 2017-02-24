@@ -91,3 +91,11 @@ PROFILE_LINK_URL=your profile link url
 
 - 設定で ```PROFILE_XXX``` を適宜記載すれば、 君の名は と言われるとプロフィールを表示します
   - who でも反応します
+
+## See Also
+
+- [【Lumen】LINEの Messaging API を使って再度Botを作ったお話 | Shimabox Blog](https://blog.shimabox.net/2017/02/24/try_line_messaging_api/ "【Lumen】LINEの Messaging API を使って再度Botを作ったお話 | Shimabox Blog")
+
+## License
+
+- MIT License

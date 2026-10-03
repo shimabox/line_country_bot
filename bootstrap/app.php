@@ -2,15 +2,7 @@
 
 require_once __DIR__.'/../vendor/autoload.php';
 
-use Monolog\Logger;
-use Monolog\Handler\RotatingFileHandler;
-use Monolog\Formatter\LineFormatter;
-
-try {
-    (new Dotenv\Dotenv(__DIR__.'/../'))->load();
-} catch (Dotenv\Exception\InvalidPathException $e) {
-    //
-}
+Dotenv\Dotenv::createImmutable(__DIR__.'/../')->safeLoad();
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +18,8 @@ try {
 $app = new Laravel\Lumen\Application(
     realpath(__DIR__.'/../')
 );
+
+$app->configure('logging');
 
 // $app->withFacades();
 
@@ -94,54 +88,6 @@ $app->register(App\Providers\LINEBotServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
-| Define a callback to be used to configure Monolog
-|--------------------------------------------------------------------------
-*/
-$app->configureMonologUsing(function($monolog) {
-
-    $handlers[] = (
-        new RotatingFileHandler(
-            storage_path("logs/error.log"),
-            0,
-            Logger::ERROR,
-            false
-        )
-    )->setFormatter(new LineFormatter(null, null, true, true));
-
-    $handlers[] = (
-        new RotatingFileHandler(
-            storage_path("logs/warning.log"),
-            0,
-            Logger::WARNING,
-            false
-        )
-    )->setFormatter(new LineFormatter(null, null, true, true));
-
-    $handlers[] = (
-        new RotatingFileHandler(
-            storage_path("logs/info.log"),
-            0,
-            Logger::INFO,
-            false
-        )
-    )->setFormatter(new LineFormatter(null, null, true, true));
-
-    $handlers[] = (
-        new RotatingFileHandler(
-            storage_path("logs/debug.log"),
-            0,
-            Logger::DEBUG,
-            false
-        )
-    )->setFormatter(new LineFormatter(null, null, true, true));
-
-    $monolog->setHandlers($handlers);
-
-    return $monolog;
-});
-
-/*
-|--------------------------------------------------------------------------
 | Load The Application Routes
 |--------------------------------------------------------------------------
 |
@@ -151,7 +97,7 @@ $app->configureMonologUsing(function($monolog) {
 |
 */
 
-$app->group(['namespace' => 'App\Http\Controllers'], function ($app) {
+$app->router->group(['namespace' => 'App\Http\Controllers'], function ($router) {
     require __DIR__.'/../routes/web.php';
 });
 

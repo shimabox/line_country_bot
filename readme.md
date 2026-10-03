@@ -9,7 +9,7 @@
 
 ## 必要なもの
 
-- PHP 5.6.4+ or newer
+- PHP 7.3 以上（curl / mbstring / XML 拡張が必要、検証環境は PHP 8.2）
 - [Composer](https://getcomposer.org)
 - SSLサーバー
 - Line Developer Trial アカウント
@@ -22,6 +22,20 @@ $ git clone https://github.com/shimabox/line_country_bot.git
 $ cd line_coutry_bot/
 $ composer install
 ```
+
+## 依存関係更新時の確認
+
+Lumen 8 に合わせてルーティング、例外処理、dotenv、ログ設定を更新しています。
+PHP 5 / 7 から更新する際は、稼働環境を PHP 7.3 以上に変更してください。
+LINE SDK の既存 API と環境変数名は維持しています。
+
+```sh
+composer validate --strict
+composer audit
+vendor/bin/phpunit
+```
+
+テストでは LINE クライアントをモックし、外部 API への通信を行いません。
 
 ## 設定
 

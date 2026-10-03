@@ -8,3 +8,5 @@ Homestead.yaml
 public/assets/img/national_flag/*
 public/assets/img/profile/*
 resources/csv/country/*
+
+.phpunit.result.cache

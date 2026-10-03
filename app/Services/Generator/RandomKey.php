@@ -117,18 +117,10 @@ class RandomKey
      */
     protected function generate()
     {
-        static $keys = [];
+        $keys = [];
 
-        if (count($keys) < $this->necessaryNumber) {
-
-            $k = mt_rand($this->rangeMin, $this->rangeMax);
-
-            if (isset($keys[$k])) {
-                $this->generate();
-            }
-
-            $keys[$k] = true;
-            $this->generate();
+        while (count($keys) < $this->necessaryNumber) {
+            $keys[mt_rand($this->rangeMin, $this->rangeMax)] = true;
         }
 
         return array_keys($keys);

@@ -11,6 +11,6 @@
 |
 */
 
-$app->group(['middleware' => 'botauth'], function($app) {
-    $app->post(env('LINEBOT_API_ENDPOINT'), 'CountryBotController@call');
+$router->group(['middleware' => 'botauth'], function($router) {
+    $router->post(env('LINEBOT_API_ENDPOINT'), 'CountryBotController@call');
 });
